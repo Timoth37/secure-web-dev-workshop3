@@ -6,4 +6,27 @@ function findAll () {
 	return [1,2,3,4]
 }
 
+function findOne(id){
+	return Location.findById(id);
+}
+
+function addLocation(data){
+	const instance = new Location(data)
+	instance.save()
+}
+
+
+function deleteByID(id){
+	return Location.findOneAndDelete( {_id : id});
+}
+
+
+function updateLocation(id, update){
+	return Location.updateOne({ _id: id }, update);
+}
+
+module.exports.updateLocation = updateLocation;
+module.exports.findOne = findOne
 module.exports.findAll = findAll
+module.exports.addLocation = addLocation;
+module.exports.deleteById = deleteByID;

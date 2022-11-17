@@ -6,23 +6,37 @@ function findAll () {
 	return [1,2,3,4]
 }
 
-function findOne(id){
-	return Location.findById(id);
+async function findOne(id){
+	const location = await Location.findById(id)
+	if(!location)
+		throw new Error("Not found")
+	return location;
 }
 
 function addLocation(data){
-	const instance = new Location(data)
-	instance.save()
+	try{
+		const instance = new Location(data)
+		instance.save()
+	}catch(e){
+		throw new Error("Wrong data")
+	}
+	return instance
 }
 
 
-function deleteByID(id){
-	return Location.findOneAndDelete( {_id : id});
+async function deleteByID(id){
+	const location = await Location.findOneAndDelete( {_id : id})
+	if(!location)
+		throw new Error("Not found")
+	return location
 }
 
 
-function updateLocation(id, update){
-	return Location.updateOne({ _id: id }, update);
+async function updateLocation(id, update){
+	const location = await Location.updateOne({ _id: id }, update);
+	if(!location)
+		throw new Error("Not found")
+	return location
 }
 
 module.exports.updateLocation = updateLocation;

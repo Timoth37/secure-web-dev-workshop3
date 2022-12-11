@@ -1,5 +1,3 @@
-// This file holds the Business-Logic layer, interacting with Data Layer
-
 const Location = require('./locations.model')
 
 function findAll () {
@@ -20,7 +18,7 @@ function addLocation(data){
 	}catch(e){
 		throw new Error("Wrong data")
 	}
-	return instance
+	return instance;
 }
 
 

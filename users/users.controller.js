@@ -16,6 +16,9 @@ async (req, res) =>{
 });
 
 router.post('/users/register', async (req, res) => {
+    if(req.body.role!=null){
+        return res.status(403).send("Forbidden")
+    }
     try{
         const user = await usersService.registerUser(req.body)
         return res.status(200).send(user)
@@ -35,6 +38,9 @@ router.put('/users/me', async (req, res) => {
     const userToken = req.headers.authorization;
     const token = userToken.split(' ');
     const decoded = jwt.verify(token[1], process.env.SECRET_KEY);
+    if(req.body.role!=null){
+        return res.status(403).send("Forbidden")
+    }
     try{
         const user = await usersService.updateByID(decoded._id, req.body)
         return res.status(200).send(user)

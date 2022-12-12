@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
 
 router.get('/locations',
 	passport.authenticate('jwt',{session : false}),
-	authorizationMiddleware.canAccess(['admin', 'normal']),
+	authorizationMiddleware.canAccess(['admin', 'user']),
 	async(req, res) => {
 	const locations = await Location.find()
 	return res.status(200).send(locations)
@@ -19,7 +19,7 @@ router.get('/locations',
 
 router.get('/locations/:id',
 	passport.authenticate('jwt',{session : false}),
-	authorizationMiddleware.canAccess(['admin', 'normal']),
+	authorizationMiddleware.canAccess(['admin', 'user']),
 	async(req,res) =>{
 	try{
 		const location = await locationsService.findOne(req.params['id'])

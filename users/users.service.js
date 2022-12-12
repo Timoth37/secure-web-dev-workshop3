@@ -6,7 +6,7 @@ require('dotenv').config()
 async function registerUser(data){
     try{
         const salt = await bcrypt.genSalt()
-        const users = new Users({...data, password : await bcrypt.hash(data.password, salt)})
+        const users = new Users({username : data.username, password : await bcrypt.hash(data.password, salt), role : "user"})
         console.log(users)
         await users.save()
         return users
@@ -34,7 +34,10 @@ async function findAll(){
 
 
 async function updateByID(id, update){
-    const user = await Users.updateOne({ _id: id }, update)
+    const user = await Users.updateOne({ _id: id }, {
+        username : update.username,
+        password : update.password
+    })
     if(!user)
         throw new Error("Not found")
     return user

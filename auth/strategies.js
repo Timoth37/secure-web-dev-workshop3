@@ -1,11 +1,11 @@
-const LocalStrategy = require('passport-local').Strategy;
+const Strategies = require('passport-local').Strategy;
 const passport = require('passport');
 const User = require("../users/users.model");
 const {compareSync} = require("bcrypt");
 require('dotenv').config()
 
 
-passport.use(new LocalStrategy(
+passport.use(new Strategies(
     function (username, password, done){
         User.findOne({username : username}, function (err,user){
             if(err) return done(err)

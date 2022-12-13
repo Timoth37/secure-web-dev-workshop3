@@ -15,7 +15,7 @@ async function registerUser(data){
     }
 }
 
-async function signJWT(user){
+function signJWT(user){
     const token = jwt.sign(
         { _id: user._id, username : user.username },
         process.env.SECRET_KEY,

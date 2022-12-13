@@ -2,10 +2,9 @@ const usersService = require("../users/users.service");
 const router = require('express').Router()
 const User = require("./users.model")
 const passport = require("passport")
-require('../auth/local.strategy')
+require('../auth/strategies')
 const jwt = require('jsonwebtoken');
 const authorizationMiddleware = require('../authorization/authorization.middleware')
-const locationsService = require("../locations/locations.service");
 require('dotenv').config()
 
 
@@ -27,22 +26,16 @@ router.post('/users/register', async (req, res) => {
     }
 })
 
-router.get('/users/me', (req, res) => {
-    const userToken = req.headers.authorization;
-    const token = userToken.split(' ');
-    const decoded = jwt.verify(token[1], process.env.SECRET_KEY);
-    return res.status(200).send({id : decoded._id,username :decoded.username})
+router.get('/users/me', passport.authenticate('jwt',{session : false}), (req, res) => {
+    return res.status(200).send({id : req.user._id,username :req.user.username})
 })
 
-router.put('/users/me', async (req, res) => {
-    const userToken = req.headers.authorization;
-    const token = userToken.split(' ');
-    const decoded = jwt.verify(token[1], process.env.SECRET_KEY);
+router.put('/users/me', passport.authenticate('jwt', {session : false}), async (req, res) => {
     if(req.body.role!=null){
         return res.status(403).send("Forbidden")
     }
     try{
-        const user = await usersService.updateByID(decoded._id, req.body)
+        const user = await usersService.updateByID(req.user._id, req.body)
         return res.status(200).send(user)
     }catch(e){
         if(e.message==="Not found"){
@@ -52,12 +45,9 @@ router.put('/users/me', async (req, res) => {
     }
 })
 
-router.delete('/users/me', async (req, res) => {
-    const userToken = req.headers.authorization;
-    const token = userToken.split(' ');
-    const decoded = jwt.verify(token[1], process.env.SECRET_KEY);
+router.delete('/users/me', passport.authenticate('jwt', {session : false}), async (req, res) => {
     try{
-        const user = await usersService.deleteByID(decoded._id)
+        const user = await usersService.deleteByID(req.user._id)
         return res.status(200).send(user)
     }catch(e){
         if(e.message==="Not found"){
@@ -67,7 +57,8 @@ router.delete('/users/me', async (req, res) => {
     }
 })
 
-router.get('/users', async (req, res) => {
+router.get('/users', passport.authenticate('jwt', {session :false}), async (req, res) => {
+    authorizationMiddleware.canAccess(['admin'])
     try{
         const users = await usersService.findAll()
         return res.status(200).send(users)

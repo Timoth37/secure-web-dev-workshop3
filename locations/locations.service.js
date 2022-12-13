@@ -13,12 +13,12 @@ async function findOne(id){
 
 function addLocation(data){
 	try{
-		const instance = new Location(data)
-		instance.save()
+		const newLocation = new Location(data)
+		newLocation.save()
+		return newLocation;
 	}catch(e){
 		throw new Error("Wrong data")
 	}
-	return instance;
 }
 
 

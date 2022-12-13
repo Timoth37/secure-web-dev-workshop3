@@ -1,10 +1,9 @@
-// This file is used to map API calls (Presentation Layer) with the
-// Business-Logic layer
 const router = require('express').Router()
 const locationsService = require('./locations.service')
 const Location = require("./locations.model")
 const passport = require('passport')
 const authorizationMiddleware = require("../authorization/authorization.middleware");
+
 router.get('/', (req, res) => {
 	return res.status(200).send("Hello World")
 })
